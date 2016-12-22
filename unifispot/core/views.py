@@ -4,7 +4,7 @@ import time
 import random,os
 from functools import wraps
 from  flask import render_template 
-from flask import url_for,flash
+from flask import url_for,flash,redirect
 from flask_classful import FlaskView,route
 from flask_security import current_user,login_required
 from flask import Flask, request, jsonify,abort,current_app
@@ -37,6 +37,13 @@ class AdminDashboard(FlaskView):
     @classy_menu_item('.dashboard', 'Dashboard', order=0,icon='fa-home',
                      visible_when=admin_menu)
     def index(self):
+        account = Account.query.get(current_user.account_id)
+        if account.firstrun == 1:
+            account.firstrun =0
+            account.save()
+            flash("Please configure your controller details",'warning')
+            return redirect(url_for('AccountManage:index'))
+
         return render_template('core/dashboard.html')
 
 
