@@ -55,6 +55,8 @@ def get_analytics(id=None):
     currdate = start_date   
     maxlogin = 0
     maxsocial = 0
+    numlikes =0 
+    numcheckins =0
     while currdate <= end_date:
         
         timestamp = currdate.timestamp * 1000

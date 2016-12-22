@@ -1,7 +1,7 @@
 {% from 'macros.html' import fields_errors,flash_message %}
 {% extends 'base.html' %}
 
-  {% block title %}{{ _('Unifispot |Login')}} {% endblock %}
+  {% block title %}{{ _('Spotipo |Login')}} {% endblock %}
 
 
 
@@ -15,7 +15,7 @@
           <section class="login_content">
             {{flash_message()}}
             <form action="{{ url_for_security('login') }}" method="post">
-              <h1>{{_('Welcome to Unifispot')}}</h1>
+              <h1>{{_('Welcome to Spotipo')}}</h1>
               <p>{{_('Hotspot Management System.')}}</p>
               <div>
                 {{ login_user_form.hidden_tag() }}
@@ -43,8 +43,8 @@
                 Contact Us if you would like to purcharse a branding permission
 
                 -->           
-                <!--AGPL attribution starts-->     
-                  <p><small>{{ _('Powered By')}} <a href="http://unifispot.com"title="Captive portal with Socil Login and Data collection" target="_blank">{{ _('Unifispot') }}</a></small> </p>
+                <!--AGPL attribution starts-->
+                  <p><small>{{ _('Powered By')}} <a href="http://spotipo.com"title="Captive portal with Socil Login and Data collection" target="_blank">{{ _('Spotipo') }}</a></small> </p>
                 <!--AGPL attribution end-->
                 </div>
               </div>
