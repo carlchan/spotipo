@@ -1,0 +1,46 @@
+{% from 'macros.html' import render,render_field_selection,render_field_with_erros %}
+
+<div class="" role="tabpanel" data-example-id="togglable-tabs">
+  <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#tab_content1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">{{('Fields')}}</a>
+    </li>
+    <li role="presentation" class=""><a href="#tab_content2" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">{{('Session Control')}}</a>
+    </li>
+    <li role="presentation" class=""><a href="#tab_content3" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">{{('Login Policy')}}</a>
+    </li>        
+  </ul>
+  <div id="myTabContent" class="tab-content">
+    
+    <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
+        <div class="form-horizontal">
+        {{itemform.hidden_tag() }}
+        {{render_field_with_erros(itemform.auth_fb_like)}}
+        {{render_field_with_erros(itemform.auth_fb_post)}}
+        {{render_field_with_erros(itemform.fb_appid)}}
+        {{render_field_with_erros(itemform.fb_app_secret)}}
+        {{render_field_with_erros(itemform.fb_page)}}
+      
+        </div>
+
+    </div>
+    <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
+        <div class="form-horizontal">
+        {{render_field_with_erros(itemform.session_limit_control)}}
+        {{render_field_with_erros(itemform.session_overridepass)}}
+        {{render_field_with_erros(itemform.data_limit)}}
+        {{render_field_with_erros(itemform.time_limit)}}
+        {{render_field_with_erros(itemform.speed_dl)}}
+        {{render_field_with_erros(itemform.speed_ul)}}
+
+
+        </div>
+    </div>
+    <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="policy-tab">
+        <div class="form-horizontal">
+        {{render_field_with_erros(itemform.relogin_policy)}}
+         </div>
+    </div>
+
+  </div>
+</div>
+

@@ -1,0 +1,104 @@
+{% macro modal_form_voucher(form,name,title) -%}
+<div class="row">
+    <div class="col-md-12">
+        <div class="modal fade" id="{{name}}" tabindex="-1" role="basic" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                        <h4 class="modal-title">{{title}}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" role="form" id="{{name}}-form">
+                            {{form.hidden_tag() }}
+                            <div class="form-group" id="number-form-group">
+                                <label class="col-md-4  control-label" >{{ form.number.label(for=form.number.id) }}</label>
+                                <div class="col-md-2">{{ form.number(class_="form-control ")}}</div>
+                                <div class="col-md-4">* number of vouchers</div>
+                            </div>
+                            <div class="form-group" id="duration-form-group">
+                                <label class="col-md-4  control-label" >{{ form.batchid.label(for=form.batchid.id) }}</label>
+                                <div class="col-md-2">{{ form.batchid(class_="form-control ",min="1000",max="9999")}}</div>
+                                <div class="col-md-4">* 4 digit batchid</div>
+
+                            </div>                             
+                            <div class="form-group" id="duration-form-group">
+                                <label class="col-md-4  control-label" >{{ form.duration_val.label(for=form.duration_val.id) }}</label>
+                                <div class="col-md-2">{{ form.duration_val(class_="form-control ")}}</div>
+                                <div class="col-md-4">{{ form.duration_type(class_="form-control ")}}</div>
+                            </div>    
+
+                            <div class="form-group" id="bytes_t-form-group">
+                                <label class="col-md-4  control-label" >{{ form.bytes_t.label(for=form.bytes_t.id) }}</label>
+                                <div class="col-md-2">{{ form.bytes_t(class_="form-control ")}}</div>
+                               
+                            
+                                <label class="col-md-3  control-label" >{{ form.num_devices.label(for=form.num_devices.id) }}</label>
+                                <div class="col-md-3">{{ form.num_devices(class_="form-control ")}}</div>
+                            </div>
+                            <div class="form-group" id="num_devices-form-group">
+                                <label class="col-md-4  control-label" >Speed in Kbps</label>
+                                <div class="col-md-4">{{ form.speed_dl(class_="form-control ",placeholder="Download")}}</div>  
+                                <div class="col-md-4">{{ form.speed_ul(class_="form-control ",placeholder="Upload")}}</div> 
+
+                            </div>   
+                            <div class="form-group" id="notes-form-group">
+                                <label class="col-md-4  control-label" >{{ form.notes.label(for=form.notes.id) }}</label>
+                                <div class="col-md-8">{{ form.notes(class_="form-control ")}}</div>
+                            </div>                                                                                                           
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn default" data-dismiss="modal" id="{{name}}-close-button">Close</button>
+                        <button type="button" class="btn blue" id="{{name}}-save-button">Save changes</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+    </div>
+    <!-- /.col-md12 -->
+</div>
+<!-- /.row -->
+{% endmacro %}
+
+
+{% macro render_voucher(voucherdesign,voucher) %}
+    <div class="contact-box">
+        {% if voucherdesign.showlogo %}
+        <div class="row logo" >
+            <img src="{{voucherdesign.logofile}}" class="img-responsive">
+        </div>
+        {%endif%}
+        </br>
+        <div class="row" >
+            <div class="col-xs-6 left-pad">
+                </br>
+                    <p style= "font-size: 16px" >Code:<strong>{{voucher.voucher}}</strong></p>
+                {% if voucherdesign.showdata %}
+                    <p style= "font-size: 12px" >Data Limit:<strong>{{voucher.bytes_t|toint}}Mb </strong></p>
+                {% endif %}
+                {% if voucherdesign.showduration %}
+                    <p style= "font-size: 12px" >Duration:<strong>{{voucher.duration_t}}</strong></p>
+                {% endif %}
+                {% if voucherdesign.showspeed %}
+                    <p style= "font-size: 12px" >Speed:<strong>{{voucher.speed_dl|toint}}</strong>Kbps/<strong>{{voucher.speed_ul|toint}}</strong>Kbps</p>
+                {% endif %}
+                {% if voucherdesign.shownotes %}
+                    <p style= "font-size: 12px" ><strong>{{voucher.notes|tostring}}</strong></p>
+                {% endif %}                
+            </div>
+            {% if voucherdesign.showqr %}
+            <div class="col-xs-6">
+                <p class="text-center">SCAN TO LOG IN</p>
+                {% set url ='http://scan2log.in/?voucher= ~voucher.voucher~' %}
+                <img src="{{ qrcode(url, box_size=5) }}" class="img-responsive">
+                <p class="text-center"style= "font-size: 12px">Or browse to: http://scan2log.in</p>
+            </div>
+            {%endif%}
+        </div>
+        <p class="text-center no-padding" style= "font-size: 10px">Powered by Unifispot(http://www.unifispot.com)</p>
+    </div>
+{%endmacro%}

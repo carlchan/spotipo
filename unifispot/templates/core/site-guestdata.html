@@ -1,0 +1,71 @@
+{% extends 'master.html' %}
+
+{% block customCSS %}
+     <!-- Datatables -->
+     <link href="{{ url_for('static', filename='datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
+     <link href="{{ url_for('static', filename='datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
+
+{%endblock%}
+
+{% block title %}Guests {% endblock %}
+
+{% block mainContent %}
+
+<div class="row">
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+        <div class="x_content">
+            <div class="x_title">
+                <h2>{{_('Guests')}}</h2>
+                <div class="clearfix"></div>
+            </div>
+
+            <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>{{_('Email')}}</th>
+                        <th>{{_('Firstname')}}</th>
+                        <th>{{_('Lastname')}}</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock%}
+
+
+
+{% block js_block %}
+    <!-- Datatables -->
+    <script src="{{ url_for('static', filename='datatables.net/js/jquery.dataTables.min.js') }}"></script> 
+    <script src="{{ url_for('static', filename='datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script> 
+    <script src="{{ url_for('static', filename='datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script> 
+    <script src="{{ url_for('static', filename='datatables.net-responsive-bs/js/responsive.bootstrap.js') }}"></script> 
+
+    <!--Custom -->
+    <script src="{{ url_for('static', filename='custom/js/datatable.js') }}"></script>
+
+    <script>
+        $(document).ready(function() {
+           create_site_menu("{{url_for('WifisiteAPI:index')}}","{{siteid}}");
+
+                $('#datatable-responsive').DataTable({
+                        "processing": true,
+                        "serverSide": true,
+                        "responsive": true,
+                        "ordering": false,
+                        "bFilter":false,  
+                        "ajax": "{{url_for('GuestViewAPI:index',siteid=siteid)}}"});
+        
+        });
+    </script>    
+
+{%endblock%}

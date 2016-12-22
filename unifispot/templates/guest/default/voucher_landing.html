@@ -1,0 +1,31 @@
+{% extends 'guest/default/base_landing.html'  %}
+
+{% from 'guest/default/guestmacros.html' import render_guest%}
+
+{% block mainData %}
+<div id="header">
+    <div style="text-align: center">
+        <h3>{{_('Welcome to our WiFi hotspot')}}</h3>
+        <h4>{{_('Please enter the following details to login')}}</h4>
+        
+    </div>
+</div>
+<form class="m-t" role="form" method="POST" id='email_form'>
+
+<div id="email">
+    {{render_guest(voucher_form)}}    
+
+    {%if wifisite.newsletter %}
+        <div class="form-group">
+            <input type="checkbox" value='1' id='newsletter' name='newsletter'checked>{{wifisite.newsletter_field}}
+        </div>
+    {%endif%}                   
+    <button type="submit"  class="btn btn-email block full-width m-b" href="#" id="email-login">
+        <strong> {{_('Login')}} </strong>
+    </button>          
+                      
+</div>
+</form>
+{%endblock%}  
+
+

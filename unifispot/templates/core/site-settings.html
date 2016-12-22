@@ -1,0 +1,216 @@
+{% from 'macros.html' import render_field_with_erros,render_method_field,general_modalform %}
+{% extends 'master.html' %}
+
+{% block title %}Manage Settings {% endblock %}
+
+{% block mainContent %}
+{{general_modalform()}}
+<div class="row">
+
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+      <div class="x_title">
+        <h2>{{_('Site Settings')}}</h2>
+        <div class="clearfix"></div>
+      </div>
+      <div class="x_content">
+
+
+        <!-- Smart Wizard -->
+        <p>{{_('Use the wizard for configuring this site.')}}</p>
+        <div id="wizard" class="form_wizard wizard_horizontal">
+          <ul class="wizard_steps">
+            <li>
+              <a href="#step-1">
+                <span class="step_no">1</span>
+                <span class="step_descr">
+                                  {{('General')}}<br />
+                                  <small>{{('General settings')}}</small>
+                              </span>
+              </a>
+            </li>
+            <li>
+              <a href="#step-2">
+                <span class="step_no">2</span>
+                <span class="step_descr">
+                                  {{('Authentication')}}<br />
+                                  <small>{{('Authentication methods')}}</small>
+                              </span>
+              </a>
+            </li>
+            <li>
+              <a href="#step-3">
+                <span class="step_no">3</span>
+                <span class="step_descr">
+                                  {{('Report')}}<br />
+                                  <small>{{('Configure reports')}}</small>
+                              </span>
+              </a>
+            </li>
+            <li>
+              <a href="#step-5">
+                <span class="step_no">5</span>
+                <span class="step_descr">
+                                  {{('Redirect')}}<br />
+                                  <small>{{('Redirect guest after login')}}</small>
+                              </span>
+              </a>
+            </li>            
+          </ul>
+          <form  id='sitesettingsform'>
+          <div id="step-1">
+              <div class="form-horizontal">
+                {{siteform.hidden_tag() }}
+                {{render_field_with_erros(siteform.name)}}
+                {{render_field_with_erros(siteform.timezone)}}
+                {{render_field_with_erros(siteform.client_id)}}
+                {{render_field_with_erros(siteform.backend_type)}}
+                {{render_field_with_erros(siteform.sitekey)}}
+              </div>
+
+          </div>
+          <div id="step-2">
+            <div class="form-horizontal">
+                {% for field in siteform %}
+                    <!--render login types -->
+                    {% if field.id is is_login_method%}
+                    {{render_method_field(field)}}
+                    {%endif%}
+
+                {% endfor %}
+            </div>
+
+          </div>
+          <div id="step-3">
+            <div class="form-horizontal"> 
+                {{render_field_with_erros(siteform.reports_type)}}
+                {{render_field_with_erros(siteform.reports_list)}}                
+            </div>
+
+          </div>
+          <div id="step-5">
+                <div class="form-horizontal"> 
+                    {{render_field_with_erros(siteform.redirect_url)}}
+                    
+                </div>
+
+                <button id='sitesettingsform-save-button' class='fake-submit' value="{{siteid}}"></button>
+
+            
+          </div>
+          </form>
+        </div>
+        <!-- End SmartWizard Content -->
+
+
+
+
+
+  
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock%}
+
+
+{% block js_block %}
+    <script src="{{ url_for('static', filename='jQuery-Smart-Wizard/js/jquery.smartWizard.js') }}"></script> 
+    <script src="{{ url_for('static', filename='custom/js/ajaxform.js') }}"></script> 
+    <script src="{{ url_for('static', filename='custom/js/moduleform.js') }}"></script> 
+    <!-- jQuery Smart Wizard -->
+    <script>
+      $(document).ready(function() {
+
+         create_site_menu("{{url_for('WifisiteAPI:index')}}","{{siteid}}");
+
+         var siteform = new AjaxForm("{{url_for('WifisiteAPI:index')}}",'sitesettingsform',"{{siteid}}");
+
+          var generalmodal = new ModuleGeneralForm('general_modal');
+
+          var emailform = new ModuleForm("/s/{{siteid}}/email/config/",'general_modal','auth_email-btn')
+
+          var fbconfigform = new ModuleForm("/s/{{siteid}}/fb/config/",'general_modal','auth_facebook-btn')
+
+          var fbconfigform = new ModuleForm("/s/{{siteid}}/voucher/config/",'general_modal','auth_voucher-btn')
+
+          var fbconfigform = new ModuleForm("/s/{{siteid}}/payment/config/",'general_modal','auth_payment-btn')      
+
+          var fbconfigform = new ModuleForm("/s/{{siteid}}/phone/config/",'general_modal','auth_phone-btn')   
+
+         //Hide the fake submit link
+         $('.fake-submit').hide();
+
+         
+        $('#wizard').smartWizard({
+              onFinish:function() {                  
+                  $( "#sitesettingsform-save-button" ).trigger( "click" );
+              },
+
+        });
+
+        $('.auth_btn').hide();
+
+        $('.buttonNext').addClass('btn btn-success');
+        $('.buttonPrevious').addClass('btn btn-primary');
+        $('.buttonFinish').addClass('btn btn-default');
+
+        //---------------Input login config boxes
+        $('input[type="checkbox"]').change(function(){ 
+
+            if($('#auth_email' ).is(":checked")){
+                $('#auth_email-btn').show();
+            }else{
+                $('#auth_email-btn').hide();
+            }
+            if($('#auth_facebook' ).is(":checked")){
+                $('#auth_facebook-btn').show();
+            }else{
+                $('#auth_facebook-btn').hide();
+            }
+            if($('#auth_phone' ).is(":checked")){
+                $('#auth_phone-btn').show();
+            }else{
+                $('#auth_phone-btn').hide();
+            }
+            if($('#auth_voucher' ).is(":checked")){
+                $('#auth_voucher-btn').show();
+            }else{
+                $('#auth_voucher-btn').hide();
+            }
+            if($('#auth_payment' ).is(":checked")){
+                $('#auth_payment-btn').show();
+            }else{
+                $('#auth_payment-btn').hide();
+            }
+
+
+        });  
+        //------------Payment gateway-----------------
+          $(document).on('change', '#payment_gateway', function(){
+              if($('#payment_gateway').val()== 'stripe'){
+                $('#payment_auth_field1-form-group').show();
+                $('#payment_auth_field2-form-group').hide();
+                $('#payment_auth_field3-form-group').hide();
+                $('#label_payment_auth_field1').text('Stripe Secret Key');
+              }
+              else if ($('#payment_gateway').val() == 'paypalpro'){
+                $('#payment_auth_field1-form-group').show();
+                $('#payment_auth_field2-form-group').show();
+                $('#payment_auth_field3-form-group').show();
+                $('#label_payment_auth_field1').text('Client ID');
+                $('#label_payment_auth_field2').text('Client Secret');                    
+                $('#label_payment_auth_field3').text('Mode(live/sandbox)');                    
+              }else{
+                $('#payment_auth_field1-form-group').hide();
+                $('#payment_auth_field2-form-group').hide();
+                $('#payment_auth_field3-form-group').hide();
+
+              }
+
+        });   
+
+      });
+    </script>
+    <!-- /jQuery Smart Wizard -->
+{%endblock%}

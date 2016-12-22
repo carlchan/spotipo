@@ -1,0 +1,24 @@
+{% extends 'guest/default/base_landing.html'  %}
+
+{% from 'guest/default/guestmacros.html' import render_guest%}
+
+{% block mainData %}
+<div id="header">
+    <div style="text-align: center">
+        <h3>{{_('Welcome to our WiFi hotspot')}}</h3>
+        <h4>{{_('Please choose a login method')}}</h4>
+        
+    </div>
+</div>
+
+<form class="m-t" role="form" method="POST" id='email_form'>
+<div id="email">
+    {% for ltype in ltypes%}                
+       <p> <a class="btn btn-{{ltype.name}} block full-width m-b" href="{{ltype.url}}" id="{{ltype.name}}-login">
+            <strong> {{ltype.title}} </strong>
+        </a>   </p> 
+    {%endfor%}      
+                      
+</div>
+</form>
+{%endblock%}  

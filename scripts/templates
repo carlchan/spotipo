@@ -1,0 +1,23 @@
+Template: spotipo/mysql-host
+Type: string
+Default: localhost
+Description: Enter MySQL Hostname [localhost]:
+ Please provide the hostname for mysql server.
+
+Template: spotipo/mysql-root-pass
+Type: password
+Description: Enter MySQL root password:
+ Please provide the password for your MySQL sever.
+
+
+Template: spotipo/mysql-root-user
+Type: string
+Default: root
+Description: Enter MySQL root Username[root]:
+ Please Enter your MySQL Root Username
+
+Template: spotipo/mysql-db-name
+Type: string
+Default: spotipo
+Description: Enter DB name you want to use [spotipo]:
+ Please provide the DB name you want to use.

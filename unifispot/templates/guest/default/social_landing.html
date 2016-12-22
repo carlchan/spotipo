@@ -1,0 +1,81 @@
+{% extends 'guest/default/base_landing.html'  %}
+
+{% from 'guest/default/guestmacros.html' import render_guest%}
+
+{% block mainData %}
+<div id="header">
+    <div style="text-align: center">
+        <h3>{{_('Welcome to our WiFi hotspot')}}</h3>
+        <h4>{{_('Please login')}}</h4>
+        
+    </div>
+</div>
+</br>
+
+<form class="m-t" role="form" method="POST" id='email_form'>
+<div id="email">
+    <button type="submit"  class="btn btn-facebook block full-width m-b" href="#" id="loginfb">
+        <i class="fa fa-facebook-square"> </i> <strong>{{_('Facebook')}}</strong
+    </button>           
+                      
+</div>
+</form>
+{%endblock%}  
+
+{% block customJS %}
+<script src="{{ url_for('static', filename='guest/js/jquery.blockui.min.js')}}" type="text/javascript"></script>
+
+        <script>
+    $(document).ready(function() {
+        $('#loginfb').click(function(e){
+                e.preventDefault(); 
+                $.blockUI({ message: '<h2><img src="/static/guest/img/loading-spinner-blue.gif" /> Loading..</h2>',css: { 
+                            border: 'none', 
+                            padding: '15px', 
+                            backgroundColor: '#000', 
+                            '-webkit-border-radius': '10px', 
+                            '-moz-border-radius': '10px', 
+                            opacity: .5, 
+                            color: '#fff' 
+                        } }); 
+                $.ajaxSetup({
+                    type: 'POST',
+                    timeout: 30000,
+                    cache: true,
+                    error: function(xhr) {
+                            $.unblockUI();
+                            alert("ERROR", "Network timeout!!,Please try again later");
+                         }
+                 });                                       
+                $.ajax({
+                    type: 'get',
+                    url: "{{url_for('unifispot.modules.unifi.guest_temp_auth',trackid=trackid)}}",
+                    
+                    data: {},
+                    success: function(data) {
+                        if (data.status) {
+                            var tid = setInterval(function() {
+                                $.getScript('//connect.facebook.net/en_US/sdk.js', function(){
+                                    clearInterval( tid );
+                                    $.unblockUI();
+                                    uri = "{{url_for('unifispot.modules.facebook.fb_login_check',trackid=trackid,_external=True)}}";
+                                     window.location = "https://www.facebook.com/dialog/oauth?client_id={{fb_appid}}&scope=email,publish_actions&redirect_uri="+uri
+                                });
+
+                            }, 1000); //5 seconds    
+
+                        }else{
+                            $.unblockUI();
+                            alert(data.msg);
+                        }
+
+                }
+                });
+                return false;
+                
+               
+        });
+    });
+        </script>
+
+{%endblock%}

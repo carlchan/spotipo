@@ -1,0 +1,99 @@
+{%from 'voucher_macros.html' import render_voucher with context%}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Vouchers</title>
+
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+     <link href="{{ url_for('static', filename='bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <!-- END GLOBAL MANDATORY STYLES -->
+    {% block css_block %}
+
+    <style>
+        .white-bg {
+            background-color: #ffffff;
+        }    
+
+        body
+        {
+
+            font-family: Arial, 'Arial Unicode MS', Helvetica, Sans-Serif;
+            color:{{voucherdesign.txtcolor}};
+
+        }    
+        .img-responsive {
+            margin: 0 auto;
+            max-height:100px;
+        }
+        .contact-box {
+            background-color: {{voucherdesign.bgcolor}};
+            border: 1px solid {{voucherdesign.bordercolor}};
+            padding: 5px;
+            margin-bottom: 5px;
+        }
+        .no-padding{
+            padding:0;
+            margin:0;
+        }
+        @media print {
+            div.lastrow {
+                page-break-after: always;
+            }
+            .left-pad{
+                padding-left:5px;
+
+            }  
+
+        }      
+        .left-pad{
+            padding-left:50px;
+
+        }       
+        .logo{
+            
+
+        }   
+    </style>
+
+    {%endblock%}
+
+</head>
+
+<body >
+<body class="white-bg">
+    <div class="wrapper wrapper-content">
+        {% for voucher in vouchers %}
+            {% if loop.index%2 == 1 %}
+                <div class="row {% if (loop.index-5)%6 == 0%} lastrow{%endif%} ">
+                
+            {%endif %}
+                <div class="col-xs-6 col-sm-4">
+                    {{render_voucher(voucherdesign,voucher)}}
+
+                </div>
+
+            {% if loop.index%2 == 0 %}
+                </div>
+            {%endif %}
+
+        {%endfor%}
+
+
+    </div>
+
+     <!-- jQuery -->
+     <script src="{{ url_for('static', filename='jquery/dist/jquery.min.js') }}"></script>
+     <!-- Bootstrap -->
+ 
+     <script src="{{ url_for('static', filename='bootstrap/dist/js/bootstrap.min.js') }}"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,69 @@
+ {%from 'macros.html' import modal_form,flash_message,render_wifisite with context%}
+ <!DOCTYPE html>
+ <html lang="en">
+   <head>
+     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+     <!-- Meta, title, CSS, favicons, etc. -->
+     <meta charset="utf-8">
+     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+ 
+     <title>{% block title %} {% endblock %}</title>
+ 
+     {% block globalCSS %}
+     <!-- Bootstrap -->
+     <link href="{{ url_for('static', filename='bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+     <!-- Font Awesome -->
+     <link href="{{ url_for('static', filename='font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">    
+     <!-- NProgress -->
+     <link href="{{ url_for('static', filename='nprogress/nprogress.css') }}" rel="stylesheet">    
+     <!-- PNotify -->
+     <link href="{{ url_for('static', filename='pnotify/dist/pnotify.css') }}" rel="stylesheet">       
+     <link href="{{ url_for('static', filename='pnotify/dist/pnotify.buttons.css') }}" rel="stylesheet">       
+     <link href="{{ url_for('static', filename='pnotify/dist/pnotify.nonblock.css') }}" rel="stylesheet">         
+     <!-- Custom Theme Style -->
+     <link href="{{ url_for('static', filename='gentellela/css/custom.min.css') }}" rel="stylesheet">  
+
+
+
+     {% endblock %}
+   </head>
+     {% block customCSS %}
+ 
+     {%endblock%}
+ 
+  {%block bodyClass %}
+     <body>
+  {% endblock %}  
+     {% block contentBlock %}
+ 
+     {%endblock%}
+     {% block globalJS %}
+     <!-- jQuery -->
+     <script src="{{ url_for('static', filename='jquery/dist/jquery.min.js') }}"></script>
+     <!-- Bootstrap -->
+ 
+     <script src="{{ url_for('static', filename='bootstrap/dist/js/bootstrap.min.js') }}"></script>
+     <!-- FastClick -->
+     <script src="{{ url_for('static', filename='fastclick/lib/fastclick.js') }}"></script>
+ 
+     <!-- NProgress -->
+     <script src="{{ url_for('static', filename='nprogress/nprogress.js') }}"></script>
+ 
+     <!-- PNotify -->
+     <script src="{{ url_for('static', filename='pnotify/dist/pnotify.js') }}"></script>  
+     <script src="{{ url_for('static', filename='pnotify/dist/pnotify.buttons.js') }}"></script>  
+     <script src="{{ url_for('static', filename='pnotify/dist/pnotify.nonblock.js') }}"></script>    
+ 
+     <!-- Custom Theme Scripts -->
+     <script src="{{ url_for('static', filename='gentellela/js/custom.min.js') }}"></script>
+     <script src="{{ url_for('static', filename='custom/js/notifications.js') }}"></script>
+     <script src="{{ url_for('static', filename='custom/js/modalform.js') }}"></script>
+     {%endblock%}
+ 
+     {% block js_block %}
+     <!-- PNotify -->
+ 
+     {%endblock%}
+   </body>
+ </html>

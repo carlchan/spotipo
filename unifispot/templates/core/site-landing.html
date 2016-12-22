@@ -1,0 +1,188 @@
+{% from 'macros.html' import render_vertical %}
+{% extends 'master.html' %}
+
+{% block customCSS %}
+ <link href="{{ url_for('static', filename='jquery-fileupload/css/jquery.fileupload.css') }}" rel="stylesheet">
+ <link href="{{ url_for('static', filename='colorpicker/css/bootstrap-colorpicker.min.css') }}" rel="stylesheet">
+<style>
+
+.scrollable {
+    height: 500px;
+    overflow-y: auto;
+}
+</style>
+
+{%endblock%}
+
+{% block title %}Landingpage {% endblock %}
+
+
+
+{%block bodyClass %}
+  <body class="nav-sm">
+{% endblock %}
+
+{% block mainContent %}
+<div class="row">
+        <div class="col-md-4">       
+          <div class="x_panel">
+            <div class="x_title">
+              <h2>{{_('Landing Page')}}</h2>
+              <ul class="nav navbar-right panel_toolbox">
+                      <li><button class="btn btn-primary" id="landingpageform-save-button">{{_('Save')}} </button>
+                      </li>
+                      <li><button class="btn btn-primary" id="landingpageform-demo"  href="{{url_for('unifispot.modules.%s.guest_portal'%wifisite.backend_type,sitekey=wifisite.sitekey,id='ff:ff:11:22:33:44',ap='ff:af:11:22:33:44',demo='1')}}"  target="_blank">{{_('Demo')}} </button>
+                      </li>
+              </ul>              
+              <div class="clearfix"></div>
+            </div>
+            <div class="x_content scrollable">        
+                    <form role="form" id="landingfilesform" method="post">
+                         
+                         {{ render_vertical(landingfilesform) }}
+                    </form>
+                    {% if wifisite.template =='template1' %}
+                    <a class="btn btn-primary btn-sm" id="edit_togle" value='simple'>{{_('More')}} </a>
+                    {% endif %}
+                    <div id="full_landing"  >
+                        <form role="form" id="landingpageform" method="post">
+                            {{ render_vertical(landingform) }}
+
+                        </form>
+                    </div>
+                    
+                    <div id="simple_landing">
+                        <form role="form" id="simplelandingpageform" method="post">
+                            {{ render_vertical(simplelandingpageform) }}
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8" id="preview-frame"> 
+            <iframe src="{{url_for('LandingpagePreview:index',siteid=siteid)}}" width="100%" height="900" frameborder="0" id="preview-iframe" ></iframe>           
+        </div>
+</div>
+{% endblock%}
+
+
+{% block js_block %}
+    <script src="{{ url_for('static', filename='custom/js/ajaxform.js') }}"></script> 
+    <script src="{{ url_for('static', filename='custom/js/landing.js') }}"></script> 
+    <script src="{{ url_for('static', filename='jquery-fileupload/js/vendor/jquery.ui.widget.js') }}"></script> 
+    <script src="{{ url_for('static', filename='jquery-fileupload/js/vendor/jquery.ui.widget.js') }}"></script> 
+    <script src="{{ url_for('static', filename='jquery-fileupload/js/jquery.iframe-transport.js') }}"></script> 
+    <script src="{{ url_for('static', filename='jquery-fileupload/js/jquery.fileupload.js') }}"></script> 
+    <script src="{{ url_for('static', filename='colorpicker/js/bootstrap-colorpicker.min.js') }}"></script> 
+
+
+    <!-- jQuery Smart Wizard -->
+    <script>
+      $(document).ready(function() {
+
+        create_site_menu("{{url_for('WifisiteAPI:index')}}","{{siteid}}");
+
+
+        $('#landingpageform-demo').click(function(e) {
+            //open demo in new page
+            e.preventDefault();
+            window.open($(this).attr('href'), '_blank');
+        });
+
+        var landingpageform = new AjaxForm("{{url_for('LandingpageAPI:index',siteid=siteid)}}",'landingpageform');
+
+        $('#full_landing').hide();
+
+
+          $("#full_landing :input").change(function() {
+              redraw_preview();
+          });
+          $("#simple_landing :input").change(function() {
+              repopulate_landingpage();
+              redraw_preview();
+          });
+
+        //handle file uploads
+
+        var logofileupload = new FilesUpload('logofile',"{{url_for('FileAPI:index',siteid=siteid)}}",'landingfilesform','landingpageform');
+
+        var bgfile = new FilesUpload('bgfile',"{{url_for('FileAPI:index',siteid=siteid)}}",'landingfilesform','landingpageform');
+        var tosfile = new FilesUpload('tosfile',"{{url_for('FileAPI:index',siteid=siteid)}}",'landingfilesform','landingpageform');        
+
+             $('#edit_togle').click(function(e){
+                e.preventDefault(); 
+                if ( $(this).attr('value') == 'simple' ){
+                    $('#full_landing').show();
+                    $('#simple_landing').hide();
+                    $('#edit_togle').attr('value','advanced');
+                    $('#edit_togle').text('Less');
+                }else{
+                    $('#full_landing').hide();
+                    $('#simple_landing').show();
+                    $('#edit_togle').attr('value','simple');
+                    $('#edit_togle').text('More');
+
+                }
+
+            });
+
+            $('#bgcolor').colorpicker().on('changeColor.colorpicker', function(event){
+                redraw_preview();
+            });
+            $('#topbgcolor').colorpicker().on('changeColor.colorpicker', function(event){
+                redraw_preview();
+            });
+            $('#toptextcolor').colorpicker().on('changeColor.colorpicker', function(event){
+                redraw_preview();
+            });
+            $('#middlebgcolor').colorpicker().on('changeColor.colorpicker', function(event){
+                redraw_preview();
+            });
+            $('#middletextcolor').colorpicker().on('changeColor.colorpicker', function(event){
+                redraw_preview();
+            });
+            $('#middletextcolor').colorpicker().on('changeColor.colorpicker', function(event){
+                redraw_preview();
+            });
+            $('#bottombgcolor').colorpicker().on('changeColor.colorpicker', function(event){
+                redraw_preview();
+            });
+            $('#bottomtextcolor').colorpicker().on('changeColor.colorpicker', function(event){
+                redraw_preview();
+            });
+            $('#footerbgcolor').colorpicker().on('changeColor.colorpicker', function(event){
+                redraw_preview();
+            });
+            $('#footertextcolor').colorpicker().on('changeColor.colorpicker', function(event){
+                redraw_preview();
+            });
+            $('#btnbgcolor').colorpicker().on('changeColor.colorpicker', function(event){
+                redraw_preview();
+            });
+            $('#btntxtcolor').colorpicker().on('changeColor.colorpicker', function(event){
+                redraw_preview();
+            });
+            $('#btnlinecolor').colorpicker().on('changeColor.colorpicker', function(event){
+                redraw_preview();
+            });            
+            $('#pagebgcolor').colorpicker().on('changeColor.colorpicker', function(event){
+                redraw_preview();
+            });
+            $('#pagebgcolor1').colorpicker().on('changeColor.colorpicker', function(event){
+                repopulate_landingpage();
+                redraw_preview();
+            });
+            $('#gridbgcolor').colorpicker().on('changeColor.colorpicker', function(event){
+                repopulate_landingpage();
+                redraw_preview();
+            });
+            $('#textcolor').colorpicker().on('changeColor.colorpicker', function(event){
+                repopulate_landingpage();
+                redraw_preview();
+            });
+        
+      });
+    </script>
+    <!-- /jQuery Smart Wizard -->
+{%endblock%}

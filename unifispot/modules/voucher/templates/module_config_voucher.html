@@ -1,0 +1,24 @@
+{% from 'macros.html' import render,render_field_selection %}
+
+<div class="" role="tabpanel" data-example-id="togglable-tabs">
+  <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#tab_content1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">{{('Fields')}}</a>
+    </li>
+  </ul>
+  <div id="myTabContent" class="tab-content">
+    
+    <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
+        <div class="form-horizontal">
+        {{itemform.hidden_tag() }}
+        {{render_field_selection(itemform.labelfor_email,itemform.enable_email,itemform.mandate_email)}}
+        {{render_field_selection(itemform.labelfor_firstname,itemform.enable_firstname,itemform.mandate_firstname)}}
+        {{render_field_selection(itemform.labelfor_lastname,itemform.enable_lastname,itemform.mandate_lastname)}}
+        {{render_field_selection(itemform.labelfor_dob,itemform.enable_dob,itemform.mandate_dob)}}
+        {{render_field_selection(itemform.labelfor_extra1,itemform.enable_extra1,itemform.mandate_extra1)}}
+        {{render_field_selection(itemform.labelfor_extra2,itemform.enable_extra2,itemform.mandate_extra2)}}        
+        </div>
+
+    </div>
+  </div>
+</div>
+

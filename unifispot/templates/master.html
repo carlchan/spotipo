@@ -1,0 +1,245 @@
+{%from 'macros.html' import modal_form,flash_message with context%}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{% block title %} {% endblock %}</title>
+
+    {% block globalCSS %}
+    <!-- Bootstrap -->
+    <link href="{{ url_for('static', filename='bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="{{ url_for('static', filename='font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">    
+    <!-- NProgress -->
+    <link href="{{ url_for('static', filename='nprogress/nprogress.css') }}" rel="stylesheet">    
+    <!-- PNotify -->
+    <link href="{{ url_for('static', filename='pnotify/dist/pnotify.css') }}" rel="stylesheet">       
+    <link href="{{ url_for('static', filename='pnotify/dist/pnotify.buttons.css') }}" rel="stylesheet">       
+    <link href="{{ url_for('static', filename='pnotify/dist/pnotify.nonblock.css') }}" rel="stylesheet">         
+    <!-- Custom Theme Style -->
+    <link href="{{ url_for('static', filename='gentellela/css/custom.css') }}" rel="stylesheet">  
+
+
+    {% endblock %}
+  </head>
+    {% block customCSS %}
+
+    {%endblock%}
+
+{%block bodyClass %}
+  <body class="nav-md">
+{% endblock %}
+
+
+    {{modal_form(userform,'usermodal',"Edit Details")}}
+    {{modal_form(newsiteform,'newsitemodal',"Add New Site")}}
+
+    <div class="container body">
+      <div class="main_container">
+
+        {% block leftColBlock %}
+        <div class="col-md-3 left_col">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title" style="border: 0;">
+              <a href="/" class="site_title"><i class="fa fa-paw"></i> <span>Spotipo</span></a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <br />
+
+            <!-- sidebar menu -->
+            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+              <div class="menu_section">
+                <ul class="nav side-menu">
+                    {%- for item in current_menu.children -%}
+                        {% if item.visible %}
+                          <li>
+                            {%- if item.children -%}                       
+                              <a href="#"><i class="fa {{ item.icon}}"></i>{{ item.text }}
+                             
+                            <span class="fa fa-chevron-down "></span>
+                            {%else%}
+                              <a href="{{ item.url}}"><i class="fa {{ item.icon}}"></i>{{ item.text }}                           
+                       
+                            {% endif%}
+                            </a>
+                            {%- if item.children -%}
+                            <ul class="nav child_menu">
+                            {%- for child in item.children -%}
+                               <li> <a href="{{ child.url}}">{{ child.text }}</a></li>
+                            {%- endfor -%}
+                            </ul>
+                            {%- endif -%}
+                          </li>
+                        {%endif%}             
+                    {%- endfor -%}     
+
+                </ul>
+              </div>
+
+            </div>
+            <!-- /sidebar menu -->
+          </div>
+        </div>
+
+        {% endblock %}
+        <!-- top navigation -->
+        {% block topNavBlock %}
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+              <div class="nav toggle">
+                <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+              </div>
+
+              <ul class="nav navbar-nav navbar-right">             
+                <li>
+                  <a href="{{url_for('security.logout')}}">
+                    <i class="fa fa-sign-out"></i> Log out
+                  </a>
+                </li>
+                <li>
+                    <a href="#" id="usermodal-edit" value='{{current_user.id}}'><i class="fa fa-cog"></i></a>
+                </li>                 
+                <li id='sitedelete' > </li>
+                <li id='sitelist' class="dropdown"></li>
+                
+              </ul>
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+        {% endblock %}
+        <!-- page content -->
+        <div class="right_col" role="main">
+          <div class="clearfix"></div>
+          {{flash_message()}}
+
+          {{current_user | show_notifications | safe}}
+
+
+          {% block mainContent %}
+            <div class="page-title">
+              <div class="title_left">
+                <h3>Plain Page</h3>
+              </div>
+
+              <div class="title_right">
+              </div>
+            </div>
+
+            <div class="clearfix"></div>
+
+           {% endblock%}
+        </div>
+        <!-- /page content -->
+
+        <!-- footer content -->
+        <footer>
+          &copy; 2016 spotipo.com
+
+          <div class="pull-right">
+          {{"Version"|print_version}}
+          <!--Keeping below lines are needed to be in align with AGPL.
+
+          Contact Us if you would like to purcharse a branding permission
+
+          -->              
+          <!--AGPL attribution starts-->
+            Hotspot management system from <a href="http://spotipo.com">Spotipo</a>
+            <!--AGPL attribution end-->
+          </div>
+          <div class="clearfix"></div>
+        </footer>
+        <!-- /footer content -->
+      </div>
+    </div>
+
+    {% block globalJS %}
+    <!-- jQuery -->
+    <script src="{{ url_for('static', filename='jquery/dist/jquery.min.js') }}"></script>
+    <!-- Bootstrap -->
+
+    <script src="{{ url_for('static', filename='bootstrap/dist/js/bootstrap.min.js') }}"></script>
+    <!-- FastClick -->
+    <script src="{{ url_for('static', filename='fastclick/lib/fastclick.js') }}"></script>
+
+    <!-- NProgress -->
+    <script src="{{ url_for('static', filename='nprogress/nprogress.js') }}"></script>
+
+    <!-- PNotify -->
+    <script src="{{ url_for('static', filename='pnotify/dist/pnotify.js') }}"></script>  
+    <script src="{{ url_for('static', filename='pnotify/dist/pnotify.buttons.js') }}"></script>  
+    <script src="{{ url_for('static', filename='pnotify/dist/pnotify.nonblock.js') }}"></script>    
+
+    <!--blockUi-->
+    <script src="{{ url_for('static', filename='blockui/jquery.blockUI.js') }}"></script>
+
+    <!--bootbox -->
+    <script src="{{ url_for('static', filename='bootbox/bootbox.min.js') }}"></script>
+
+    <!-- Custom Theme Scripts -->
+    <script src="{{ url_for('static', filename='gentellela/js/custom.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='custom/js/notifications.js') }}"></script>
+    <script src="{{ url_for('static', filename='custom/js/modalform.js') }}"></script>
+    <script src="{{ url_for('static', filename='custom/js/sitemenu.js') }}"></script>
+    {%endblock%}
+
+
+    <script>
+      $(document).ready(function() {
+            var userform = new ModalForm("{{url_for('UserAPI:index')}}",'usermodal');
+            var newsiteform = new ModalForm("{{url_for('WifisiteAPI:index')}}",'newsitemodal',pagereload=1);
+
+           $(document).on('click', '#site-del', function(e){
+              el = this;
+              bootbox.confirm("You are about to delete the site,this action can't be undone. Are you Sure? ", function(r) {
+                  if (r) {
+                      //sent request to delete order with given id
+                      //block UI while request is processed
+                      $.blockUI({boxed: true});
+                      $.ajax({
+                          type: 'delete',
+                          url: "{{url_for('WifisiteAPI:delete',id=siteid)}}",
+                          data: {},
+                          success: function(b) {
+                               $.unblockUI();
+                              if (b.status) {
+                                  new ShowError('Success',b.msg);
+                                  window.location.href = "{{url_for('AdminDashboard:index')}}";                      
+                              }
+                              else{
+                                  new ShowError('Error',b.msg);
+
+                              }                                               
+                          },
+                          timeout: 30000,
+                          error: function(xhr) {
+                              $.unblockUI();
+                              new ShowError('Error','Network timeout!!,Please try again later');
+                             
+                          }
+                          
+                      });
+                  
+                  }
+              });
+
+          });           
+      
+
+      });
+    </script>
+    <!-- /PNotify -->
+{% block js_block %}
+
+{%endblock%}
+
+  </body>
+</html>

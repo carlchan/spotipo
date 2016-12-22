@@ -1,0 +1,42 @@
+{% extends 'guest/default/base_landing.html'%}
+
+{% block customMeta %}
+    <meta http-equiv="refresh" content="10; url={{redirect_url|safe}}" />
+{%endblock%}  
+
+{% block mainData %}
+<form class="m-t" role="form" method="POST" id='email_form'>
+    {{flash_message()}}
+    <p>
+        {{_('If you are not redirected automatically, please')}} <a href="{{redirect_url|safe}}">{{_('click')}}</a>
+    </p>
+                      
+                      
+</div>
+</form>
+{%endblock%}  
+
+{% block customJS %}
+<script src="{{ url_for('static', filename='guest/js/jquery.blockui.min.js')}}" type="text/javascript"></script>
+
+<script type="text/javascript">
+setTimeout(function () {
+        window.location.href = "{{redirect_url|safe}}"; //will redirect to your blog page (an ex: blog.html)
+}, 10000); //will call the function after 2 secs.
+
+    $(document).ready(function(){
+
+    $.blockUI({ message: '<h2><img src="/static/guest/img/loading-spinner-blue.gif" /> Loading..</h2>',css: { 
+                        border: 'none', 
+                        padding: '15px', 
+                        backgroundColor: '#000', 
+                        '-webkit-border-radius': '10px', 
+                        '-moz-border-radius': '10px', 
+                        opacity: .5, 
+                        color: '#fff' 
+                    } }); 
+
+    });
+</script>
+
+{%endblock%}

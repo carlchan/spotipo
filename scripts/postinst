@@ -1,0 +1,158 @@
+#!/bin/sh
+# postinst script for spotipo
+
+set -e
+
+# summary of how this script can be called:
+#        * <postinst> `configure' <most-recently-configured-version>
+#        * <old-postinst> `abort-upgrade' <new version>
+#        * <conflictor's-postinst> `abort-remove' `in-favour' <package>
+#          <new-version>
+#        * <postinst> `abort-remove'
+#        * <deconfigured's-postinst> `abort-deconfigure' `in-favour'
+#          <failed-install-package> <version> `removing'
+#          <conflicting-package> <version>
+# for details, see http://www.debian.org/doc/debian-policy/ or
+# the debian-policy package
+
+# source debconf library
+. /usr/share/debconf/confmodule
+
+CONFFILE=/usr/share/nginx/spotipo/instance/config.py
+INSTALLDIR=/usr/share/nginx/spotipo
+
+case "$1" in
+
+  configure)
+    db_get spotipo/mysql-host && MYSQLHOST=${RET}
+    db_get spotipo/mysql-root-user  && MYSQLUSER=${RET}
+    db_get spotipo/mysql-root-pass && MYSQLPASS=${RET}
+    db_get spotipo/mysql-db-name && MYSQLDB=${RET}
+
+    cd $INSTALLDIR
+
+    if [ ! -d $INSTALLDIR/instance ]; then
+        mkdir -p $INSTALLDIR/instance
+        echo '-------------------------Creating instance folder-----------------------------------------'
+    fi
+    if [ ! -d $INSTALLDIR/logs ]; then
+        mkdir -p $INSTALLDIR/logs
+        echo '-------------------------Creating logs folder-----------------------------------------'
+    fi
+
+    if [ ! -d $INSTALLDIR/unifispot/static/uploads/ ]; then
+        mkdir -p $INSTALLDIR/unifispot/static/uploads/
+        echo '-------------------------Creating uploads folder-----------------------------------------'
+    fi
+    if [ ! -f $INSTALLDIR/instance/__init__.py ]; then
+        /bin/touch $INSTALLDIR/instance/__init__.py
+        echo '-------------------------Creating instance/__init__.py file--------------------------------'
+    fi
+
+    if [ ! -f $INSTALLDIR/instance/config.py ]; then
+        /bin/cp $INSTALLDIR/scripts/instance_sample.py $INSTALLDIR/instance/config.py
+        KEY=`python -c "import uuid;print uuid.uuid4()"`
+        echo '-------------------------Creating instance/config.py file--------------------------------'
+        sed -i "s/^HASH_SALT.*/HASH_SALT=\"$KEY\"/g"  $CONFFILE
+        sed -i "s/^SQLALCHEMY_DATABASE_URI.*/SQLALCHEMY_DATABASE_URI=\"mysql:\/\/$MYSQLUSER:$MYSQLPASS@$MYSQLHOST\/$MYSQLDB\"/g"  $CONFFILE
+    fi
+    if ! mysql -u$MYSQLUSER -p$MYSQLPASS -h$MYSQLHOST  -e 'use '$MYSQLDB; then
+        echo " Trying to create a new Db named $MYSQLDB"
+        mysql -u$MYSQLUSER -p$MYSQLPASS -h$MYSQLHOST -e "create database "$MYSQLDB;
+    fi
+
+    if [ ! -f $INSTALLDIR/.env/bin/activate ]; then
+        pip install virtualenv
+        virtualenv $INSTALLDIR/.env
+
+    fi
+
+    $INSTALLDIR/.env/bin/pip install -r $INSTALLDIR/requirements/linux.txt
+
+    if [ ! -d $INSTALLDIR/migrations ]; then
+        echo '-------------------------No migrations folder found,initializing DB-------------------------'
+        cd $INSTALLDIR
+        $INSTALLDIR/.env/bin/python $INSTALLDIR/manage.py db init
+
+    fi
+    $INSTALLDIR/.env/bin/python $INSTALLDIR/manage.py db migrate
+    $INSTALLDIR/.env/bin/python $INSTALLDIR/manage.py db upgrade
+    $INSTALLDIR/.env/bin/python $INSTALLDIR/manage.py init_data
+
+
+
+    if [  -d /etc/init/uwsgi.conf ]; then
+        echo '-------------Upstart UWSGI config found, removing and upgrading to supervisor--------------'
+        if service --status-all | grep -Fq 'uwsgi'; then
+          sudo service uwsgi stop
+        fi
+        rm -rf /etc/init/uwsgi.conf
+
+    fi
+
+    if [ ! -d /etc/uwsgi ]; then
+        echo '-------------------------Creating /etc/uwsgi-----------------------------------------'
+        mkdir /etc/uwsgi
+
+    fi
+    if [ ! -d /etc/uwsgi/vassals ]; then
+        echo '-------------------------Creating /etc/uwsgi/vassals-----------------------------------------'        
+        mkdir /etc/uwsgi/vassals
+        ln -sf /usr/share/nginx/spotipo/scripts/uwsgi.ini /etc/uwsgi/vassals/uwsgi.ini
+    fi
+
+    if [ ! -f /etc/uwsgi/vassals/uwsgi.ini ]; then
+        echo '-------------------------Configuring /etc/uwsgi/vassals/uwsgi.ini-----------------------------'
+        ln -sf /usr/share/nginx/spotipo/scripts/uwsgi.ini /etc/uwsgi/vassals/uwsgi.ini
+
+    else
+        rm -rf /etc/uwsgi/vassals/uwsgi.ini
+        ln -sf /usr/share/nginx/spotipo/scripts/uwsgi.ini /etc/uwsgi/vassals/uwsgi.ini
+
+    fi
+
+    if [ ! -f /etc/nginx/sites-enabled/wifiapp ]; then
+        echo '-------------------------Configuring nGINX-----------------------------------------'
+        rm -rf /etc/nginx/sites-enabled/default
+        cp /usr/share/nginx/spotipo/scripts/wifiapp.conf /etc/nginx/sites-available/wifiapp.conf
+        ln -sf /etc/nginx/sites-available/wifiapp.conf /etc/nginx/sites-enabled/wifiapp
+
+    else
+        cp /usr/share/nginx/spotipo/scripts/wifiapp.conf /etc/nginx/sites-available/wifiapp.conf
+        ln -sf /etc/nginx/sites-available/wifiapp.conf /etc/nginx/sites-enabled/wifiapp
+    fi
+
+    if [ ! -f /etc/supervisor/conf.d/unifispot_celery.conf ]; then
+        echo '-------------------------Configuring celeryd-----------------------------------------'
+        ln -sf /usr/share/nginx/spotipo/scripts/supervisord.conf  /etc/supervisor/conf.d/unifispot_celery.conf
+    else
+        rm -rf /etc/supervisor/conf.d/unifispot_celery.conf
+        ln -sf /usr/share/nginx/spotipo/scripts/supervisord.conf  /etc/supervisor/conf.d/unifispot_celery.conf
+    fi
+
+    chown -R www-data:www-data /usr/share/nginx/spotipo
+    service nginx restart
+    service supervisor restart
+
+  ;;
+
+  abort-upgrade|abort-remove|abort-deconfigure)
+    exit 0
+  ;;
+
+  *)
+    echo "postinst called with unknown argument \`$1'" >&2
+    exit 1
+  ;;
+
+esac
+
+# dh_installdeb will replace this with shell code automatically
+# generated by other debhelper scripts.
+
+#DEBHELPER#
+
+db_stop
+
+exit 0
+         

@@ -1,0 +1,70 @@
+{% extends 'master.html'%}
+{%from 'macros.html' import render %}
+
+{% block customCSS %}
+     <!-- Datatables -->
+     <link href="{{ url_for('static', filename='datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
+     <link href="{{ url_for('static', filename='datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
+
+{%endblock%}
+{% block title %}Manage Settings {% endblock %}
+
+{% block mainContent %}
+
+<div class="page-title">
+  <div class="title_left">
+    <h3>Settings</h3>
+  </div>
+
+  <div class="title_right">
+  </div>
+</div>
+
+<div class="clearfix"></div>
+
+<div class="row">
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+        <div class="x_content">
+            <div class="x_title">
+                <ul class="nav navbar-right panel_toolbox">
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <form  id='settingsform' class="form-horizontal">
+              {{render(settingsform)}}
+
+              <div class="ln_solid"></div>
+              <div class="form-group">
+                  <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                    <button id='settingsform-save-button' class="btn btn-success" value='{{current_user.account_id}}'>Submit</button>
+                  </div>
+              </div>              
+
+            </form>
+
+        </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock%}
+
+
+{% block js_block %}
+    <script src="{{ url_for('static', filename='custom/js/ajaxform.js') }}"></script> 
+
+    <!--Custom -->
+    <script src="{{ url_for('static', filename='custom/js/datatable.js') }}"></script>
+
+    <script>
+        $(document).ready(function() {
+          // $('.dataTables-example').DataTable();
+           
+          create_site_menu("{{url_for('WifisiteAPI:index')}}",0);
+          var siteform = new AjaxForm("{{url_for('AccountAPI:index')}}",'settingsform',"{{current_user.account_id}}");
+    });
+    </script>    
+
+{%endblock%}

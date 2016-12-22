@@ -1,0 +1,69 @@
+{% macro render_guest(form) -%}
+
+{{form.hidden_tag() }}
+{% for field in form %}
+    {% if field.type not in ['CSRFTokenField', 'HiddenField'] and field.id  not in [ 'newsletter','subscribe'] %}
+    <!--  {{ field() }}-->
+    <div class="form-group {% if field.errors %}error{% endif %}" id="{{field.id}}-form-group">
+          {{ field(class_="form-control", placeholder=field.label.text)}}
+            {% if field.errors %}
+              {% for error in field.errors %}
+               <span class="alert alert-danger">[{{ error }}]</span><br>
+              {% endfor %}
+            {% endif %}
+     </div><!-- //form-group-->
+    {% endif %}
+{% endfor %}
+{%endmacro%}
+
+
+{% macro render_payment_form(form) -%}
+
+{{form.hidden_tag() }}
+    <div class="form-group {% if form.card.errors %}error{% endif %}" id="{{form.card.id}}-form-group">
+        <div class="col-xs-12">
+          {{ form.card(class_="form-control", placeholder=form.card.label.text)}}
+            {% if form.card.errors %}
+              {% for error in form.card.errors %}
+               <span class="alert alert-danger">[{{ error }}]</span>
+              {% endfor %}
+            {% endif %}
+        </div>
+     </div><!-- //form-group-->
+    <div class="form-group {% if form.expmonth.errors %}error{% endif %}" id="{{form.expmonth.id}}-form-group">
+
+          <div class="col-xs-4">
+          {{ form.expmonth(class_="form-control", placeholder=form.card.label.text)}}
+          </div>
+          <div class="col-xs-offset-2 col-xs-4">
+          {{ form.expyear(class_="form-control ", placeholder=form.card.label.text)}}
+          </div>
+            {% if form.expmonth.errors %}
+              {% for error in form.expmonth.errors %}
+               <span class="alert alert-danger">[{{ error }}]</span><br>
+              {% endfor %}
+            {% endif %}
+            {% if form.expyear.errors %}
+              {% for error in form.expyear.errors %}
+               <span class="alert alert-danger">[{{ error }}]</span><br>
+              {% endfor %}
+            {% endif %}   
+            </br>         
+     </div><!-- //form-group-->
+
+  {% for field in form %}
+    {% if field.type not in ['CSRFTokenField', 'HiddenField'] and field.id  not in [ 'newsletter','subscribe','card','expmonth','expyear'] %}
+
+    <div class="form-group {% if field.errors %}error{% endif %}" id="{{field.id}}-form-group">
+        <div class="col-xs-12">
+          {{ field(class_="form-control", placeholder=field.label.text)}}
+            {% if field.errors %}
+              {% for error in field.errors %}
+               <span class="alert alert-danger">[{{ error }}]</span><br>
+              {% endfor %}
+            {% endif %}
+        </div>
+     </div><!-- //form-group-->
+    {% endif %}
+{% endfor %}
+{%endmacro%}

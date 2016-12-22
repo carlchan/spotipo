@@ -1,0 +1,140 @@
+{% extends 'master.html'%}
+
+{% block customCSS %}
+<style>
+
+.tile-stats {
+    color:#1ab394 !important;
+}
+.tile-stats .icon {
+    color:#1ab394 !important;
+}
+
+.tile-stats h3{
+    color:#1ab394 !important;
+}
+</style>
+
+{%endblock%}
+
+
+{% block title %}Dashboard {% endblock %}
+
+{% block mainContent %}
+
+<!-- top tiles -->
+<div class="row top_tiles">
+  <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+    <div class="tile-stats">
+      <div class="icon"><i class="fa fa-rss"></i></div>
+      <div class="count" id='total_visits'></div>
+      <h3>{{_('Visits')}}</h3>
+      
+    </div>
+  </div>
+  <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+    <div class="tile-stats">
+      <div class="icon"><i class="fa fa-user"></i></div>
+      <div class="count" id='total_logins'></div>
+      <h3>{{_('Logins')}}</h3>
+
+    </div>
+  </div>
+  <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+    <div class="tile-stats">
+      <div class="icon"><i class="fa fa-thumbs-up"></i></div>
+      <div class="count" id='total_likes'></div>
+      <h3>{{_('Likes')}}</h3>
+    </div>
+  </div>
+  <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+    <div class="tile-stats">
+      <div class="icon"><i class="fa fa-map-marker"></i></div>
+      <div class="count" id='total_checkins'></div>
+      <h3>{{_('Checkins')}}</h3>
+    </div>
+  </div>
+</div>
+<!-- /top tiles -->
+
+<div class="row">
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="dashboard_graph x_panel">
+      <div class="row x_title">
+        <div class="col-md-6">
+          <h3>{{_('Guest Activity')}} <small></small></h3>
+        </div>
+        <div class="col-md-6">
+          <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
+            <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+            <span></span> <b class="caret"></b>
+          </div>
+        </div>
+      </div>
+      <div class="x_content">
+        <div class="demo-container" style="height:250px">
+          <div id="flot-dashboard-chart" class="demo-placeholder" style="width: 100%; height:250px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6 col-sm-6 col-xs-6">
+    <div class="dashboard_graph x_panel">
+      <div class="row x_title">
+        <div class="col-md-6">
+          <h3>{{_('Login Types')}} <small></small></h3>
+        </div>
+      </div>
+      <div class="x_content">
+        <div class="demo-container" style="height:250px">
+          <canvas id="doughnutChart" height="140"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-sm-6 col-xs-6">
+    <div class="dashboard_graph x_panel">
+      <div class="row x_title">
+        <div class="col-md-6">
+          <h3>{{_('Social Activity')}} <small></small></h3>
+        </div>
+      </div>
+      <div class="x_content">
+        <div class="demo-container" style="height:250px">
+          <div id="flot-social-chart" class="demo-placeholder" style="width: 100%; height:250px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{%endblock%}
+
+{% block js_block %}
+    <script src="{{ url_for('static', filename='Flot/jquery.flot.js') }}"></script>
+    <script src="{{ url_for('static', filename='Flot/jquery.flot.time.js') }}"></script>
+    <script src="{{ url_for('static', filename='flot.curvedlines/curvedLines.js') }}"></script>
+    <script src="{{ url_for('static', filename='moment/min/moment.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='datepicker/daterangepicker.js') }}"></script>
+    <script src="{{ url_for('static', filename='chartJs/Chart.min.js') }}"></script>
+
+    <!--Custom -->
+    <script src="{{ url_for('static', filename='custom/js/dashboard.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+           create_site_menu("{{url_for('WifisiteAPI:index')}}","{{siteid}}");
+
+        });
+    </script>  
+          <!-- Flot -->
+    <script>
+      $(document).ready(function() {
+
+          AnalyticsDashboard('/s/analytics/api/{{siteid}}');
+
+      });
+    </script>
+    <!-- /Flot -->
+
+{%endblock%}

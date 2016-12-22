@@ -1,0 +1,102 @@
+{% extends 'master.html' %}
+{% from 'voucher_macros.html' import modal_form_voucher %}
+
+{% block customCSS %}
+  
+     <!-- Datatables -->
+     <link href="{{ url_for('static', filename='datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
+     <link href="{{ url_for('static', filename='datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">  
+    {{elementcss|safe}}
+
+{%endblock%}
+
+{% block title %}{{_('Vouchers')}} {% endblock %}
+
+
+{% block mainContent %}
+
+{{modal_form_voucher(voucherform,'vouchermodel','Vouchers')}}
+
+<div class="row">
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+        <div class="x_content">
+            <div class="x_title">
+                <h2>{{_('Vouchers')}}</h2>
+                <ul class="nav navbar-right panel_toolbox">
+
+                  <li>
+                    <a class="btn btn-xs btn-success" style="color:#fff;" id="vouchermodel-add-new">{{_('Add New')}} </a>
+                  </li>
+                  <li>
+                    <a class="btn btn-xs btn-success" style="color:#fff;" href="{{url_for('unifispot.modules.voucher.voucher_print',siteid=siteid)}}" target='_blank'>{{_('Print Unused')}} </a>
+                  </li>           
+                </ul>
+                <div class="clearfix"></div>
+
+              
+            </div>
+            <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                          <th>{{_('Voucher')}}</th>
+                          <th>{{_('# of Devices')}}</th>
+                          <th>{{_('Duration')}}</th>
+                          <th>{{_('Details')}}</th>
+                          <th>{{_('Status')}}</th>
+                          <th>{{_('Notes')}}</th>
+                          <th>{{_('')}}</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock%}
+
+{% block js_block %}
+    <!-- Datatables -->
+    <script src="{{ url_for('static', filename='datatables.net/js/jquery.dataTables.min.js') }}"></script> 
+    <script src="{{ url_for('static', filename='datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script> 
+    <script src="{{ url_for('static', filename='datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script> 
+    <script src="{{ url_for('static', filename='datatables.net-responsive-bs/js/responsive.bootstrap.js') }}"></script> 
+
+    <!--Custom -->
+    <script src="{{ url_for('static', filename='custom/js/datatable.js') }}"></script>
+
+
+    <script>
+        $(document).ready(function() {
+          // $('.dataTables-example').DataTable();
+          create_site_menu("{{url_for('WifisiteAPI:index')}}","{{siteid}}");
+
+            var api_url = "{{url_for('unifispot.modules.voucher.VoucherAPI:index',siteid=siteid)}}";
+
+            var users_table = new DataTableWithEdit("datatable-responsive",{
+                    "processing": true,
+                    "serverSide": true,
+                    "responsive": true,
+                    "ordering": false,
+                    "bFilter":false,  
+                    "ajax": api_url},
+                    api_url,
+                    'vouchermodel');
+   
+        //handle single voucher printing 
+        $('#datatable-responsive').on( 'click', 'a.print', function (e) {
+            e.preventDefault(); 
+            window.open("{{url_for('unifispot.modules.voucher.voucher_print',siteid=siteid)}}"+this.id);    
+
+        });          
+
+     });
+  
+</script>
+{%endblock%}

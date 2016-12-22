@@ -1,0 +1,10 @@
+#SQLALCHEMY_ECHO = True
+ASSETS_DEBUG = True
+DEBUG = True
+NO_UNIFI = True
+WTF_CSRF_ENABLED = False
+TESTING = True
+DATA_INIT = False
+BROKER_BACKEND = 'memory'
+HASH_SALT = '78y8rh2wd9823ehy82hdih7weq'
+LOGIN_DISABLED = False

@@ -1,0 +1,130 @@
+{% extends 'guest/default/base_landing.html'  %}
+
+{% from 'guest/default/guestmacros.html' import render_payment_form%}
+
+{% block customCSS %}
+    <style type="text/css">
+        .btn-voucher {
+            background-color: #eb583b;
+            border-color: #eb583b;
+            color: #FFFFFF;       
+        }        
+        .btn-back {
+            background-color: #fff;
+            border-color: #fff;
+            color: #000;       
+        }      
+        .btn-payment {
+            background-color: #f8ac59;
+            border-color: #f8ac59;
+            color: #fff;       
+        }      
+        .btn-account {
+            background-color: #18a689;
+            border-color: #18a689;
+            color: #fff;       
+        }        
+        input{
+          -moz-border-radius: 6px !important;;
+            border-radius: 6px !important;;
+            padding:5px;
+        }
+        .btn-phone:hover {
+            color: #000 !important;
+
+        }
+
+
+    </style>
+{%endblock%}
+
+{% block mainData %}
+
+
+    
+    {%if package_to_buy %}
+    <div id="header">
+        <div style="text-align: center">
+            <h3>{{_('Welcome to our WiFi hotspot')}}</h3>
+            <h4 id='pkg-hdng'>{{package_to_buy.name}}</h3>
+            
+        </div>
+    </div>    
+    
+    <div id="payment">
+    <form role="form" id="payment_form" class="form-horizontal" method="POST">
+        {{render_payment_form(payment_form)}}    
+        <p><button type="submit"  class="btn btn-voucher block full-width m-b" href="#" id="payment-login">
+            {%if package_to_buy.free %}
+                <strong> {{_('Try')}} </strong>
+            {%else%}
+                <strong> {{_('Pay')}} </strong>
+            {%endif%}
+        </button>  </p> 
+
+        <p><a  class="btn btn-payment block full-width m-b" href="{{url_for('unifispot.modules.payment.guest_login',trackid=trackid)}}" id="back-package">
+            <strong> {{_('Back')}} </a></strong>
+        </p> 
+    </form> 
+    </div>
+    {% else%}
+    <div id="header">
+        <div style="text-align: center">
+            <h3>{{_('Welcome to our WiFi hotspot')}}</h3>
+            <h4 id='pkg-hdng'>{{_('Please select a package')}}</h3>
+            
+        </div>
+    </div>    
+
+    
+    <div id="packages">
+        <p> <a  class="btn btn-account block full-width m-b pkgbtn" href="{{url_for('unifispot.modules.payment.payment_account_login',trackid=trackid)}}" >
+            <strong> Already Paid </strong>
+        </a>   </p>
+        {% for package in packages %}
+
+        <p><a  class="btn btn-payment block full-width m-b pkgbtn" href="{{url_for('unifispot.modules.payment.guest_login',trackid=trackid,package_id=package.id)}}" id="{{package.id}}">
+            <strong> {{package.name}} </strong>
+        </a> </p>
+        {%endfor%}
+                   
+    </div>
+    {%endif%}
+
+    
+                      
+
+
+{%endblock%}  
+
+
+{% block customJS %}
+<script src="{{ url_for('static', filename='guest/js/jquery.blockui.min.js')}}" type="text/javascript"></script>
+
+<script>
+    jQuery(document).ready(function() {
+        $('#payment-login').click(function (e) {
+            $('#payment-login').hide();
+            e.preventDefault();
+            $.blockUI({ 
+                        message: '<h2><img src="/static/img/loading-spinner-blue.gif" />Loading..</h2>',
+                        css: { 
+                                border: 'none', 
+                                padding: '15px', 
+                                backgroundColor: '#000', 
+                                '-webkit-border-radius': '10px', 
+                                '-moz-border-radius': '10px', 
+                                opacity: .5, 
+                                color: '#fff' 
+                            } 
+                       });                 
+            $('#payment_form').submit();
+
+
+                
+
+        });   
+    });
+</script>
+
+{%endblock%}

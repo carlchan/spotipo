@@ -1,0 +1,17 @@
+*.pyc
+instance/*
+migrations/*
+migrations_test/*
+.project
+.pydevproject
+*.swp
+*.log
+logs/*
+env/*
+.env/*
+unifispot/static/uploads/*
+*.db
+.cache/
+build/Output/*
+build/poppet2/*
+build/linbuild/*

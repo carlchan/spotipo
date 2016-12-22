@@ -1,0 +1,180 @@
+{% from 'macros.html' import flash_message %}
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block customMeta %}
+
+    {%endblock%}  
+
+    <title>{{_('Welcome To Our Hotspot')}}</title>
+
+    <style>
+    html {
+        background: {%if landingpage.bgfile%}url( {{  landingpage.bgfile}}) no-repeat center center fixed !important{%else%}{% if landingpage.pagebgcolor%} {{landingpage.pagebgcolor}} !important{%endif%} {%endif%}; 
+        -webkit-background-size: 100% 100% !important;
+        -moz-background-size: 100% 100% !important;
+        -o-background-size: 100% 100% !important;
+        background-size: 100% 100% !important;
+    }
+    .middle-box {
+        background-color:{%if landingpage.bgcolor%} {{landingpage.bgcolor}} {%endif%} ;         
+    }    
+    html,body,section{height:100%;}
+    body {  
+
+        font-family: {%if landingpage.basefont%}{{landingpage.basefont | printfont}} !important{%endif%};
+        background: transparent !important;
+        color:{%if landingpage.toptextcolor%}{{landingpage.toptextcolor}} !important{%endif%};
+        font-size: 13px !important;
+        padding-right: 0px !important
+    }
+
+    .img-responsive {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: auto;
+    }    
+    .no-bg{
+
+        background: transparent !important;
+        border:0 !important;
+    }
+    .panel {
+        background-color:{%if landingpage.bgcolor%} {{landingpage.bgcolor}} !important {%endif%} ; 
+        border:{%if landingpage.bgcolor%} {{landingpage.bgcolor}} !important {%endif%} ; 
+
+    }
+    .panel-heading {
+        border:0 !important;
+    }
+    .powered{
+        padding-top: 20px;
+        font-family: "Open Sans",serif;
+        font-size:10px;
+
+    }
+
+    .powered-text{
+
+        font-family: "Open Sans",serif;
+        font-size:10px;
+
+    }
+    .signin {
+        padding-top: 20px;
+
+
+    }    
+
+    .btn-email {
+        background-color: #1b9af5;
+        border-color: #1b9af5;
+        color: #FFFFFF;       
+    }    
+    .btn-phone {
+        background-color: #268263;
+        border-color: #268263;
+        color: #FFFFFF;       
+    }    
+    .btn-facebook {
+        background-color: #3b5b96;
+        border-color: #3b5b96;
+        color: #FFFFFF;       
+    }    
+    
+    .btn-voucher {
+        background-color: #eb583b;
+        border-color: #eb583b;
+        color: #FFFFFF;       
+    }  
+   .btn-payment {
+        background-color: #337ab7;
+        border-color: #2e6da4;
+        color: #FFFFFF;       
+    }    
+    .btn-back {
+        background-color: #fff;
+        border-color: #fff;
+        color: #000;       
+    }        
+    input{
+      -moz-border-radius: 6px !important;;
+        border-radius: 6px !important;;
+        padding:5px;
+    }
+    .btn-phone:hover {
+        color: #000 !important;
+
+    }
+    .full-width {
+        display: block;
+        width: 100%;
+    }    
+    .login-text{
+        text-align: center;
+    }
+    </style>
+
+
+    <!-- Bootstrap -->
+    <link href="{{ url_for('static', filename='bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="{{ url_for('static', filename='font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">  
+    {% block customCSS %}
+
+    {%endblock%}    
+
+</head>
+<body >
+<body >
+    <br>
+    <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                {{flash_message()}}
+                <div class="" style="text-align: center">
+                    <img src="{%if landingpage.logofile%}{{  landingpage.logofile }}{%endif%}" class="img-responsive"  id='sitelogo' alt="Logo"/>
+                </div>
+                {% block mainData %}
+                    <div id="header">
+                        <div style="text-align: center">
+                            <h3>Welcome to our WiFi hotspot</h3>
+                        </div>
+                    </div>
+                {%endblock%}                  
+
+
+            </div>
+
+            <!--Keeping below lines are needed to be in align with AGPL.
+
+            Contact Us if you would like to purcharse a branding permission
+
+            -->   
+            <!--AGPL attribution starts-->
+            <p class='login-text'><small>{{_('Powered By')}} <a href="http://spotipo.com"title="Captive portal with Socil Login and Data collection" target="_blank">{{_('Spotipo')}}</a></small></p>
+            <!--AGPL attribution end-->
+            <p class="login-text"> <small>{{_('By Logging In You agree to our')}} <a href="{{landingpage.tosfile}}"> {{_('Terms and Conditions')}}</a> {{_('And')}} <a href="{{landingpage.tosfile}}">{{_('Privacy Policy')}}</a></small> </p>            
+        </div>
+    </div>
+
+
+    <!-- jQuery -->
+    <script src="{{ url_for('static', filename='jquery/dist/jquery.min.js') }}"></script>
+    <!-- Bootstrap -->
+
+    <script src="{{ url_for('static', filename='bootstrap/dist/js/bootstrap.min.js') }}"></script>
+        
+
+{% block customJS %}
+
+{%endblock%}
+
+</body>
+
+</html>
