@@ -4,7 +4,7 @@ import arrow
 
 from unifispot.core.models import Wifisite,Device,Guesttrack,Guest
 from unifispot.core.guestutils import init_track,validate_track,redirect_guest
-from unifispot.modules.payment.models import Package,Transaction,Paymentconfig
+
 from tests.helpers import randomMAC
 
 @pytest.fixture(scope='function')

@@ -403,7 +403,7 @@ def handle_override(guesttrack,wifisite,guestdevice,loginconfig,AuthModel,Overri
             flash(_l('Wrong password'),'danger')
 
     landingpage = Landingpage.query.filter_by(siteid=wifisite.id).first()
-    return render_template(templatefile,base=wifisite.template,\
+    return render_template('guest/%s/%s'%(wifisite.template,templatefile),\
             wifisite=wifisite,landingpage=landingpage,
             override_form=override_form,trackid=guesttrack.trackid)      
 
