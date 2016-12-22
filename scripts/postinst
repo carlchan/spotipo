@@ -78,6 +78,7 @@ case "$1" in
     $INSTALLDIR/.env/bin/python $INSTALLDIR/manage.py db migrate
     $INSTALLDIR/.env/bin/python $INSTALLDIR/manage.py db upgrade
     $INSTALLDIR/.env/bin/python $INSTALLDIR/manage.py init_data
+    $INSTALLDIR/.env/bin/python $INSTALLDIR/manage.py get_notifications
 
 
 

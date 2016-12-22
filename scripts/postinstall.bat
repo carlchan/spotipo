@@ -78,6 +78,7 @@ IF NOT EXIST "C:\spotipo\migrations" (
 python C:\spotipo\manage.py db migrate
 python C:\spotipo\manage.py db upgrade
 python C:\spotipo\manage.py init_data
+python C:\spotipo\manage.py get_notifications
 
 
 REM configure apache

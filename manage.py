@@ -134,7 +134,7 @@ def rebuild_monthly_stats():
 
 
 @manager.command
-def test_notification_get():
+def get_notifications():
     with app.app_context():
         from unifispot.core.tasks import celery_get_notification
         from unifispot.core.models import Wifisite
