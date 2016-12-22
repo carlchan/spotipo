@@ -82,6 +82,7 @@ case "$1" in
 
 
 
+
     if [  -d /etc/init/uwsgi.conf ]; then
         echo '-------------Upstart UWSGI config found, removing and upgrading to supervisor--------------'
         if service --status-all | grep -Fq 'uwsgi'; then

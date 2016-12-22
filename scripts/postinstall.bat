@@ -81,6 +81,7 @@ python C:\spotipo\manage.py init_data
 python C:\spotipo\manage.py get_notifications
 
 
+
 REM configure apache
 IF NOT EXIST "C:\Apache24\modules\mod_wsgi.so" ( 
     copy C:\spotipo\tools\mod_wsgi.so C:\Apache24\modules
