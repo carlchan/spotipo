@@ -544,7 +544,13 @@ class Guest(ExportMixin,CRUDMixin,SerializerMixin,db.Model):
     site        = db.relationship(Wifisite, backref=db.backref("guests", \
                                 cascade="all,delete"))
 
+    __export_titles__ = ['Firstname','Lastname','Email','Phone Number','Age Range',"DOB",'Extra',"Created on"]
+    __export_public__ = ['firstname','lastname','email','phonenumber','agerange','dob','details','created_at']
+    __export_modifiers__ = {'created_at':'format_datetime','details':'guest_details_to_str'}
 
+    def guest_details_to_str(self,key):
+        '''Convert detatils, which are like extra info collected into a string format'''
+        return {key: ','.join('{}:{}'.format(k, v) for k,v in sorted(self.details.items()))}
     def get_device_phonenumber(self):
         for device in self.devices:
             phonenumber = device.get_phonenumber()
@@ -594,8 +600,10 @@ class Guest(ExportMixin,CRUDMixin,SerializerMixin,db.Model):
             self.agerange = '%s-%s'%(age_range.get('min',''),age_range.get('max',''))
 
     def get_query(self,siteid,startdate,enddate):
+        print 'start :%s end :%s'%(startdate,enddate)
 
-        return Guest.query.filter_by(siteid=siteid,demo=0)        
+        return Guest.query.filter(and_(Guest.siteid==siteid,Guest.demo==0,Guest.created_at>=startdate.naive,
+                                Guest.created_at<=enddate.naive))
 
 
 class Device(CRUDMixin,SerializerMixin,db.Model):

@@ -91,7 +91,7 @@ class ExportMixin(object):
         return self.__export_titles__ or self.__export_public__ 
         
     def format_datetime(self,key):
-        return { key: _format_datetime(getattr(self, key)) }
+        return { key: arrow.get(getattr(self, key)).format('DD-MM-YYYY') }
 
     def to_row(self):
         field_names = self.get_field_names()
@@ -112,7 +112,11 @@ class ExportMixin(object):
                 rv.update(modifier(key))
             else:
                 rv.update(modifier(self,key))
-        return rv
+        lst = []
+        for key in public:
+            lst.append(str(rv[key]))
+
+        return lst
 
 
 

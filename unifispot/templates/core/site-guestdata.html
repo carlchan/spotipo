@@ -16,7 +16,15 @@
     <div class="x_panel">
         <div class="x_content">
             <div class="x_title">
-                <h2>{{_('Guests')}}</h2>
+                <h2>{{_('Guests ')}}</h2>
+                &nbsp;
+                <button class="btn btn-sm btn-primary "  id="guestdata-download"><strong>{{_('Download')}}</strong></button>
+                <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
+                    <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                        <input type="hidden" class="input-sm form-control" name="startdate" id="startdate" data-date-format="dd/mm/yyyy"  value=""/>
+                        <input type="hidden" class="input-sm form-control" name="enddate" id="enddate"  data-date-format="dd/mm/yyyy" value="" />                       
+                    <span></span> <b class="caret"></b>
+                </div>
                 <div class="clearfix"></div>
             </div>
 
@@ -49,7 +57,8 @@
     <script src="{{ url_for('static', filename='datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script> 
     <script src="{{ url_for('static', filename='datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script> 
     <script src="{{ url_for('static', filename='datatables.net-responsive-bs/js/responsive.bootstrap.js') }}"></script> 
-
+    <script src="{{ url_for('static', filename='moment/min/moment.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='datepicker/daterangepicker.js') }}"></script>
     <!--Custom -->
     <script src="{{ url_for('static', filename='custom/js/datatable.js') }}"></script>
 
@@ -57,13 +66,51 @@
         $(document).ready(function() {
            create_site_menu("{{url_for('WifisiteAPI:index')}}","{{siteid}}");
 
-                $('#datatable-responsive').DataTable({
+            var data_table =  $('#datatable-responsive').DataTable({
                         "processing": true,
                         "serverSide": true,
                         "responsive": true,
                         "ordering": false,
                         "bFilter":false,  
-                        "ajax": "{{url_for('GuestViewAPI:index',siteid=siteid)}}"});
+                        "ajax": {
+                                'url':"{{url_for('GuestViewAPI:index',siteid=siteid)}}",
+                                "data": function ( d ) {
+                                    d.startdate = $('#startdate').val();
+                                    d.enddate = $('#enddate').val();
+                                    // d.custom = $('#myInput').val();
+                                    // etc
+                                }                            
+                            }
+                        });
+
+            function cb(start, end) {
+                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            }
+            cb(moment().subtract(29, 'days'), moment());
+
+            $('#reportrange').daterangepicker({
+                ranges: {
+                   'Today': [moment(), moment()],
+                   'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                   'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                   'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                   'This Month': [moment().startOf('month'), moment().endOf('month')],
+                   'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                }
+            }, cb);
+
+            $('#reportrange').on('apply.daterangepicker', function(ev, picker) {
+                $('#startdate').val(picker.startDate.format('DD/MM/YYYY'));
+                $('#enddate').val(picker.endDate.format('DD/MM/YYYY'));
+                data_table.ajax.reload();
+            });  
+
+            $('#guestdata-download').click(function(e) {
+                e.preventDefault();  
+                var url = "{{url_for('GuestViewAPI:index',siteid=siteid)}}"+'?download=1&startdate='+$('#startdate').val()+'&enddate='+$('#enddate').val();
+                window.open(url);
+
+            });
         
         });
     </script>    

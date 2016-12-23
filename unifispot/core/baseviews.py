@@ -259,7 +259,7 @@ class SiteDataViewAPI(FlaskView):
             csvHeading = ','.join(self.get_modal_obj().get_titles())
             elements = self.get_modal_obj().get_query(siteid=siteid,startdate=startdate,
                                     enddate=enddate).all()
-            csvList = '\n'.join(','.join(row.to_list()) for row in elements) 
+            csvList = '\n'.join(','.join(row.to_row()) for row in elements) 
 
             # We need to modify the response, so the first thing we 
             # need to do is create a response out of the CSV string
