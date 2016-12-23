@@ -1,6 +1,7 @@
 import logging
 import string
 import time
+import arrow
 import random,os
 from functools import wraps
 from  flask import render_template 
@@ -494,10 +495,21 @@ class LandingpagePreview(FlaskView):
 
 class GuestViewAPI(SiteDataViewAPI):
     #columns that will be shown in the datatable
-    displaycolumns = ['email','firstname','lastname']
+    displaycolumns = ['email','firstname','lastname',
+        'phonenumber','agerange','details','created_at']
+
+    def _show_details(row):
+        return ','.join('{}:{}'.format(k, v) for k,v in \
+                    sorted(row.details.items()))
+
+    def _show_date(row):
+        return arrow.get(row.created_at).format('DD-MM-YYYY') 
     #filter that needs to be applied if any for each column
     #https://github.com/Pegase745/sqlalchemy-datatables
-    displayfilters = {}
+    displayfilters = {
+            'created_at':_show_date,
+            'details':_show_details
+    }
 
     def get_name(self):
         return 'Guest'

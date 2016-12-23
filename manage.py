@@ -90,7 +90,9 @@ def init_demo():
                 track.save()
                 if i%2:
                     f = randomGuestEmailForm()
-                    g= assign_guest_entry(site1,track,f)   
+                    g = assign_guest_entry(site1,track,f)   
+                    g.createdat = day_start.replace(minutes=+i*1).naive
+                    g.naive()
                 track.save()
                 logger.warn('track added for email ID;%s for :%s'%(track.id,day_start))
 
@@ -102,7 +104,9 @@ def init_demo():
                 track.loginstat =  {'num_visits':1,'auth_facebook':1,'fbcheckedin':1}
                 track.save()
                 if i%2:
-                    g= assign_guest_entry(site1,track,f)   
+                    g= assign_guest_entry(site1,track,f) 
+                    g.createdat = day_start.replace(minutes=+i*1).naive
+                    g.naive()                      
                     track.updatestat('fbliked',1)
                     track.save()              
                 track.save()
