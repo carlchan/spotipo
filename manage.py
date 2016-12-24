@@ -92,7 +92,7 @@ def init_demo():
                     f = randomGuestEmailForm()
                     g = assign_guest_entry(site1,track,f)   
                     g.createdat = day_start.replace(minutes=+i*1).naive
-                    g.naive()
+                    g.save()
                 track.save()
                 logger.warn('track added for email ID;%s for :%s'%(track.id,day_start))
 
@@ -106,7 +106,7 @@ def init_demo():
                 if i%2:
                     g= assign_guest_entry(site1,track,f) 
                     g.createdat = day_start.replace(minutes=+i*1).naive
-                    g.naive()                      
+                    g.save()                      
                     track.updatestat('fbliked',1)
                     track.save()              
                 track.save()
