@@ -266,7 +266,7 @@ def validate_voucherconfig(f):
         voucherconfig = Voucherconfig.query.filter_by(siteid=wifisite.id).first()
         if not voucherconfig:
             guestlog_warn('empty voucherconfig, aborting',wifisite,guesttrack)
-            aboirt(404)
+            abort(404)
         kwargs['voucherconfig'] = voucherconfig
         #get paymentauth for this device
         voucherauth = Voucherauth.query.filter_by(siteid=wifisite.id,

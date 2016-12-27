@@ -9,6 +9,7 @@ from sqlalchemy import and_,or_
 from flask import request
 from dateutil import tz
 import validators
+from urlparse import urlparse,parse_qs
 
 from unifispot.core.models import Wifisite,Guesttrack,Device,Guest,\
                                 Landingpage

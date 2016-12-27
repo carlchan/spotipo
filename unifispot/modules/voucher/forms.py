@@ -90,7 +90,7 @@ class VoucherForm(Form):
     number          = IntegerField(_l("Create"),validators = [DataRequired()])
     bytes_t         = IntegerField(_l("Total Data in Mb"))
     duration_type   = SelectField(_l("Select"),coerce=int,
-                            choices=[(1,'Hours'),(2,'Days'),(3,'Months')] )  
+                            choices=[(1,'Minutes'),(2,'Hours'),(3,'Days')] )  
     num_devices     = IntegerField(_l("Devices Allowed"),validators = [DataRequired()])  
     speed_dl        = IntegerField(_l("Download Speed"))
     speed_ul        = IntegerField(_l("Upload Speed"))
