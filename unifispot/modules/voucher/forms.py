@@ -78,7 +78,7 @@ class VoucherDesignForm(Form):
         pass    
 
 class VoucherFilesForm(Form):
-    actuallogofile        = FileField(_l('Logo File'))
+    logofile        = FileField(_l('Logo File'))
     def populate(self):
         pass        
 

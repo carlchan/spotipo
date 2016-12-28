@@ -97,7 +97,7 @@
 
         var voucherdesign_form = new AjaxForm("{{url_for('unifispot.modules.voucher.VoucherDesignAPI:index',siteid=siteid)}}",'voucherdesignform',0);  
 
-        var logofileupload = new FilesUpload('actuallogofile',"{{url_for('FileAPI:index',siteid=siteid)}}",'logofile','voucherdesignform');
+        var logofileupload = new FilesUpload('logofile',"{{url_for('FileAPI:index',siteid=siteid)}}",'voucherfilesform','voucherdesignform');
 
         $('#bgcolor').colorpicker().on('changeColor.colorpicker', function(event){
             //redraw_preview();
