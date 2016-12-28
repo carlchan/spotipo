@@ -38,7 +38,7 @@ class AccountForm(Form):
     unifi_user      = TextField(_l('Controller Username'),validators = [Required()])
     unifi_pass      = PasswordField(_l('Controller Password'),validators = [Required()])
     unifi_port      = TextField(_l('Controller Port'),validators = [Required()])
-    unifi_version   = SelectField(_('Controller API version'),choices=[('v4','V4')])
+    unifi_version   = SelectField(_('Controller API version'),choices=[('v4','V4/V5')])
 
     def populate(self):
         pass
