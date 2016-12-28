@@ -57,45 +57,46 @@ def get_analytics(id=None):
     maxsocial = 0
     numlikes =0 
     numcheckins =0
-    while currdate <= end_date:
-        
+    while currdate <= end_date:        
         timestamp = currdate.timestamp * 1000
-        daystat = basequery.filter(Sitestat.date==currdate.floor('day').naive).first()
-        if daystat:
-            statdict = daystat.to_dict()
-            logins = daystat.num_newlogins + daystat.num_repeats
-            #create new guests list            
-            newguests.append((timestamp,daystat.num_newlogins))
-            #update maxlogin
-            if logins > maxlogin:
-                maxlogin = logins
-            #create checkins list
-            numcheckins = statdict.get('fbcheckedin',0)
-            totalcheckins.append((timestamp,numcheckins))
-            if numcheckins > maxsocial:
-                maxsocial = numcheckins
-            #create likes list
-            numlikes = statdict.get('fbliked',0)
-            totallikes.append((timestamp,numlikes))
-            if numlikes > maxsocial:
-                maxsocial = numlikes
-            #create total logins list
-            totallogins.append((timestamp,logins))
-            #update combinestats
-            keys = list(set(combinedstats.keys( ) + statdict.keys()))
-            for key in keys:
-                try:
-                    val1 = int(combinedstats.get(key,0))
-                    val2 = int(statdict.get(key,0))
-                except:
-                    pass
-                else:
-                    combinedstats[key] = val1 + val2               
-        else:
-            newguests.append((timestamp,0))
-            totallogins.append((timestamp,0))     
-            totalcheckins.append((timestamp,0))     
-            totallikes.append((timestamp,0))     
+        daystats = basequery.filter(Sitestat.date==currdate.floor('day').naive).all()
+        for daystat in daystats:
+            if daystat:
+                statdict = daystat.to_dict()
+                logins = daystat.num_newlogins + daystat.num_repeats
+                #create new guests list            
+                newguests.append((timestamp,daystat.num_newlogins))
+                #update maxlogin
+                if logins > maxlogin:
+                    maxlogin = logins
+                #create checkins list
+                numcheckins = statdict.get('fbcheckedin',0)
+                totalcheckins.append((timestamp,numcheckins))
+                if numcheckins > maxsocial:
+                    maxsocial = numcheckins
+                #create likes list
+                numlikes = statdict.get('fbliked',0)
+                totallikes.append((timestamp,numlikes))
+                if numlikes > maxsocial:
+                    maxsocial = numlikes
+                #create total logins list
+                totallogins.append((timestamp,logins))
+                #update combinestats
+                keys = list(set(combinedstats.keys( ) + statdict.keys()))
+                for key in keys:
+                    try:
+                        val1 = int(combinedstats.get(key,0))
+                        val2 = int(statdict.get(key,0))
+                    except:
+                        pass
+                    else:
+                        combinedstats[key] = val1 + val2               
+            else:
+                newguests.append((timestamp,0))
+                totallogins.append((timestamp,0))     
+                totalcheckins.append((timestamp,0))     
+                totallikes.append((timestamp,0)) 
+                
         currdate=currdate.replace(days=1)      
 
 

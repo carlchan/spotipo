@@ -31,7 +31,7 @@
               <ul class="nav navbar-right panel_toolbox">
                       <li><button class="btn btn-primary" id="landingpageform-save-button">{{_('Save')}} </button>
                       </li>
-                      <li><button class="btn btn-primary" id="landingpageform-demo"  href="{{url_for('unifispot.modules.%s.guest_portal'%wifisite.backend_type,sitekey=wifisite.sitekey,id='ff:ff:11:22:33:44',ap='ff:af:11:22:33:44',demo='1')}}"  target="_blank">{{_('Demo')}} </button>
+                      <li><a class="btn btn-primary" id="landingpageform-demo"  href="{{url_for('unifispot.modules.%s.guest_portal'%wifisite.backend_type,sitekey=wifisite.sitekey,id='ff:ff:11:22:33:44',ap='ff:af:11:22:33:44',demo='1')}}"  target="_blank">{{_('Demo')}} </a>
                       </li>
               </ul>              
               <div class="clearfix"></div>
