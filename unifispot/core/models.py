@@ -683,7 +683,8 @@ class Guestsession(CRUDMixin,SerializerMixin,db.Model):
     d_updated   = db.Column(db.String(20))            #data updated last
     demo        = db.Column(db.Integer,default=0,index=True)
     obj_id      = db.Column(db.String(30),index=True)  #_id of document in guest collection of unifi
-
+    site        = db.relationship(Wifisite, 
+                      backref=db.backref("guestsessions",cascade="all,delete"))
 
 
 class Guesttrack(CRUDMixin,SerializerMixin,db.Model):
