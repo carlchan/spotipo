@@ -71,7 +71,9 @@ class UserAPI(RESTView):
         abort(405)             
  
     def delete(self,id): 
-        abort(405)             
+        abort(405)  
+
+                 
  
          
 class AdminAPI(RESTView):
@@ -93,7 +95,7 @@ class AdminAPI(RESTView):
         return 'Admin'
 
     def get_extrafields_modal(self):
-        return {'account_id':current_user.account_id}
+        return {'account_id':current_user.account_id,'active':1}
 
 class AdminManage(FlaskView):
     decorators = [login_required,admin_required]
@@ -124,7 +126,7 @@ class ClientAPI(RESTView):
         return 'Client'
 
     def get_extrafields_modal(self):
-        return {'account_id':current_user.account_id}
+        return {'account_id':current_user.account_id,'active':1}
 
 class ClientManage(FlaskView):
     decorators = [login_required,admin_required]

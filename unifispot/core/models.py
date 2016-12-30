@@ -42,7 +42,7 @@ class User(CRUDMixin,SerializerMixin,db.Model, UserMixin):
     current_login_ip= db.Column(db.String(100))
     login_count     = db.Column(db.Integer)
     confirmed_at    = db.Column(db.DateTime)
-    active          = db.Column(db.Boolean())
+    active          = db.Column(db.Boolean(),default=1)
     type            = db.Column(db.String(50))
     __mapper_args__ = {'polymorphic_identity': 'user',
             'polymorphic_on':type}
