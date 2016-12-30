@@ -135,6 +135,8 @@ case "$1" in
     chown -R www-data:www-data /usr/share/nginx/spotipo
     service nginx restart
     service supervisor restart
+    update-rc.d supervisor defaults
+    update-rc.d supervisor enable    
 
   ;;
 
