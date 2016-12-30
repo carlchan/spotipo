@@ -5,7 +5,7 @@ from flask_classful import FlaskView
 from flask_security import current_user,login_required
 from datatables import ColumnDT, DataTables
 from flask import Flask, render_template, request, jsonify,make_response
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import SQLAlchemyError,IntegrityError
 from dateutil import tz
 
 from unifispot.utils.translation import _l,_n,_
@@ -84,6 +84,11 @@ class RESTView(FlaskView):
                 item.populate_from_form(itemform)
                 item.save()
                 item.populate_from_dict(self.get_extrafields_modal())
+            except IntegrityError as exception:
+                logger.exception('UserID:%s submited form caused exception'\
+                        %(current_user.id))
+                return jsonify({'status':0,'data':{}, 'msg':_('Duplicate exists for the given values of %(name)s'\
+                        ,name=self.get_name())})                 
             except SQLAlchemyError as exception:
                 logger.exception('UserID:%s submited form caused exception'\
                         %(current_user.id))
@@ -107,6 +112,11 @@ class RESTView(FlaskView):
                     item.populate_from_form(itemform)
                     item.save()
                     item.populate_from_dict(self.get_extrafields_modal())
+                except IntegrityError as exception:
+                    logger.exception('UserID:%s submited form caused exception'\
+                            %(current_user.id))
+                    return jsonify({'status':0,'data':{}, 'msg':_('Duplicate exists for the given values of %(name)s'\
+                            ,name=self.get_name())})                       
                 except SQLAlchemyError as exception:
                     logger.exception('UserID:%s submited form caused exception'\
                             %(current_user.id))
@@ -203,6 +213,11 @@ class SiteModuleAPI(FlaskView):
                 item.populate_from_form(itemform)
                 item.save()
                 item.populate_from_dict(self.get_extrafields_modal())
+            except IntegrityError as exception:
+                logger.exception('UserID:%s submited form caused exception'\
+                        %(current_user.id))
+                return jsonify({'status':0,'data':{}, 'msg':_('Duplicate exists for the given values of %(name)s'\
+                        ,name=self.get_name())})                   
             except SQLAlchemyError as exception:
                 db.session.rollback()
                 logger.exception('UserID:%s submited form caused exception'\
@@ -405,6 +420,11 @@ class SiteModuleElementAPI(FlaskView):
                 #always assign siteid while creation
                 item.siteid = siteid
                 item.populate_from_dict(self.get_extrafields_modal())
+            except IntegrityError as exception:
+                logger.exception('UserID:%s submited form caused exception'\
+                        %(current_user.id))
+                return jsonify({'status':0,'data':{}, 'msg':_('Duplicate exists for the given values of %(name)s'\
+                            ,name=self.get_name())})                   
             except SQLAlchemyError as exception:
                 logger.exception('UserID:%s submited form caused exception'\
                         %(current_user.id))
@@ -428,6 +448,11 @@ class SiteModuleElementAPI(FlaskView):
                     item.populate_from_form(itemform)
                     item.save()
                     item.populate_from_dict(self.get_extrafields_modal())
+                except IntegrityError as exception:
+                    logger.exception('UserID:%s submited form caused exception'\
+                            %(current_user.id))
+                    return jsonify({'status':0,'data':{}, 'msg':_('Duplicate exists for the given values of %(name)s'\
+                            ,name=self.get_name())})                       
                 except SQLAlchemyError as exception:
                     logger.exception('UserID:%s submited form caused exception'\
                             %(current_user.id))
