@@ -711,6 +711,7 @@ class Guesttrack(CRUDMixin,SerializerMixin,db.Model):
     loginstat       = db.Column(JSONEncodedDict(255)) #store relevant stats
                                                        # will have value like {'auth_facebook':1,
                                                        #   'fb_liked':1,'newlogin':1}
+    extrainfo       =  db.Column(JSONEncodedDict(500))   #to store extra info                                                        
 
     def updatestat(self,key,val):
         '''method to update statistics value for this track
@@ -736,4 +737,12 @@ class Guesttrack(CRUDMixin,SerializerMixin,db.Model):
 
 
 
+    def updateextrainfo(self,key,val):
+        '''method to update extrainfo value for this track
+
+        '''
+        oldinfo = dict(self.extrainfo)
+        oldinfo[key] = val
+        self.extrainfo = oldinfo
+        self.save()
 
